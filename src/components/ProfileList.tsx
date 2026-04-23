@@ -1,98 +1,110 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { UserProfile } from '../types';
-import { MapPin, Briefcase, GraduationCap, Heart, Eye, EyeOff, Trash2, ArrowRight } from 'lucide-react';
+import { MapPin, Briefcase, GraduationCap, Star, Trash2, Eye, ExternalLink } from 'lucide-react';
 
 interface ProfileListProps {
   title: string;
   description: string;
   profiles: UserProfile[];
   onViewProfile: (id: string) => void;
-  onAction?: (id: string, action: string) => void;
-  emptyMessage?: string;
+  onAction?: (id: string, action: 'remove-shortlist' | 'unhide') => void;
 }
 
-export default function ProfileList({ title, description, profiles, onViewProfile, onAction, emptyMessage }: ProfileListProps) {
+export default function ProfileList({ title, description, profiles, onViewProfile, onAction }: ProfileListProps) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-full">
-      <div className="p-6 border-b border-slate-100">
-        <h2 className="text-lg font-bold text-slate-800">{title}</h2>
-        <p className="text-sm text-slate-500">{description}</p>
-      </div>
+    <div className="flex flex-col gap-6">
+      <header className="mb-4">
+        <h1 className="text-2xl font-display font-bold text-slate-800 tracking-tight">{title}</h1>
+        <p className="text-sm text-slate-500 font-medium">{description}</p>
+      </header>
 
-      <div className="flex-1 overflow-auto p-6 scrollbar-hide">
-        {profiles.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-64 text-slate-400">
-            <Eye size={48} className="mb-4 opacity-20" />
-            <p className="text-sm font-medium">{emptyMessage || 'No profiles found in this list.'}</p>
+      {profiles.length === 0 ? (
+        <div className="bg-white rounded-3xl p-12 text-center border-2 border-dashed border-slate-200">
+          <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Star className="text-slate-300" size={32} />
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {profiles.map((profile) => (
-              <motion.div
-                key={profile.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-slate-50 border border-slate-100 rounded-xl p-4 flex gap-4 group hover:border-indigo-200 transition-all shadow-sm hover:shadow-md"
-              >
-                <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-slate-200 border border-slate-200">
-                  <img 
-                    src={profile.photos[0]} 
-                    alt={profile.name} 
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
+          <h3 className="text-lg font-bold text-slate-800 mb-2">No Active Profiles Here</h3>
+          <p className="text-sm text-slate-500 max-w-xs mx-auto">
+            Try refining your search or expanding your preferences to see more matches.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+          {profiles.map((profile, index) => (
+            <motion.div
+              key={profile.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className="group bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-indigo-600/5 hover:-translate-y-1 transition-all"
+            >
+              <div className="relative aspect-[3/4] overflow-hidden">
+                <img 
+                  src={profile.photos[0]} 
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                  alt={profile.name} 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+                
+                {/* Visual Badges */}
+                <div className="absolute top-4 left-4 flex gap-2">
+                   <div className="glass px-2 py-1 rounded text-[10px] font-bold text-white uppercase tracking-widest border-white/40">
+                      Top Match
+                   </div>
                 </div>
 
-                <div className="flex-1 min-w-0">
-                  <div className="flex justify-between items-start">
-                    <h3 className="font-bold text-slate-800 truncate">{profile.name}, {profile.age}</h3>
-                    <div className="flex gap-1">
-                       {profile.isShortlisted && <Heart size={14} className="text-rose-500 fill-rose-500" />}
-                       {profile.isHidden && <EyeOff size={14} className="text-slate-400" />}
-                    </div>
+                <div className="absolute bottom-4 left-4 right-4 text-white">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="text-lg font-display font-bold leading-none">{profile.name}, {profile.age}</h3>
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-500" title="Online" />
                   </div>
-                  
-                  <div className="space-y-1 mt-1 text-[11px] text-slate-500">
-                    <div className="flex items-center gap-1.5">
-                      <Briefcase size={12} className="text-indigo-400" />
-                      <span className="truncate">{profile.profession}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <MapPin size={12} className="text-indigo-400" />
-                      <span className="truncate">{profile.location}</span>
-                    </div>
-                  </div>
+                  <p className="text-xs text-white/70 font-medium flex items-center gap-1">
+                    <MapPin size={12} className="text-rose-400" />
+                    {profile.location}
+                  </p>
+                </div>
+              </div>
 
-                  <div className="flex gap-2 mt-3">
+              <div className="p-5">
+                <div className="space-y-3 mb-6">
+                  <ProfileInfoItem icon={Briefcase} text={profile.profession} />
+                  <ProfileInfoItem icon={GraduationCap} text={profile.education.split(' ').slice(0, 3).join(' ')} />
+                </div>
+
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => onViewProfile(profile.id)}
+                    className="flex-1 py-3 bg-slate-900 text-white rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-indigo-600 transition-all flex items-center justify-center gap-2"
+                  >
+                    <Eye size={14} /> Full Profile
+                  </button>
+                  {onAction && (
                     <button 
-                      onClick={() => onViewProfile(profile.id)}
-                      className="text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-all flex items-center gap-1"
+                      onClick={() => onAction(profile.id, profile.isHidden ? 'unhide' : 'remove-shortlist')}
+                      className="w-12 h-12 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 hover:text-rose-600 hover:border-rose-100 hover:bg-rose-50 transition-all"
+                      title={profile.isHidden ? 'Unhide' : 'Remove'}
                     >
-                      View Profile <ArrowRight size={10} />
+                      {profile.isHidden ? <ExternalLink size={18} /> : <Trash2 size={18} />}
                     </button>
-                    {onAction && title.includes('Hidden') && (
-                       <button 
-                         onClick={() => onAction(profile.id, 'unhide')}
-                         className="text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
-                       >
-                         Unhide
-                       </button>
-                    )}
-                    {onAction && title.includes('Shortlisted') && (
-                       <button 
-                         onClick={() => onAction(profile.id, 'remove-shortlist')}
-                         className="text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
-                       >
-                         Remove
-                       </button>
-                    )}
-                  </div>
+                  )}
                 </div>
-              </motion.div>
-            ))}
-          </div>
-        )}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ProfileInfoItem({ icon: Icon, text }: { icon: any, text: string }) {
+  return (
+    <div className="flex items-center gap-2 text-slate-500">
+      <div className="p-1.5 bg-slate-50 rounded-lg">
+         <Icon size={12} className="text-indigo-400" />
       </div>
+      <span className="text-[11px] font-bold truncate leading-none">{text}</span>
     </div>
   );
 }

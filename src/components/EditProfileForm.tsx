@@ -8,7 +8,9 @@ import {
   Briefcase, 
   Users, 
   Heart,
-  Camera
+  Camera,
+  GraduationCap,
+  Sparkles
 } from 'lucide-react';
 import { UserProfile } from '../types';
 
@@ -19,10 +21,10 @@ interface EditProfileFormProps {
 }
 
 const STEPS = [
-  { id: 'basic', title: 'Basic Info', icon: User },
-  { id: 'pro', title: 'Career & Education', icon: Briefcase },
-  { id: 'family', title: 'Family Details', icon: Users },
-  { id: 'about', title: 'About & Desires', icon: Heart },
+  { id: 'basic', title: 'Identity', description: 'Core personal details', icon: User },
+  { id: 'pro', title: 'Career', description: 'Professional background', icon: Briefcase },
+  { id: 'family', title: 'Heritage', description: 'Family and values', icon: Users },
+  { id: 'about', title: 'Lifestyle', description: 'Personal bio & desires', icon: Sparkles },
 ];
 
 export default function EditProfileForm({ initialData, onSave, onCancel }: EditProfileFormProps) {
@@ -57,140 +59,118 @@ export default function EditProfileForm({ initialData, onSave, onCancel }: EditP
       case 0:
         return (
           <motion.div 
-            initial={{ x: 20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -20, opacity: 0 }}
-            className="space-y-6"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -20, opacity: 0 }}
+            className="space-y-8"
           >
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold uppercase tracking-wider text-[#8E8E8E]">Full Name</label>
-                <input 
-                  type="text" 
-                  value={formData.name}
-                  onChange={(e) => updateField('name', e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-white border border-[#EAE2D6] focus:ring-2 focus:ring-[#5A5A40] focus:border-transparent outline-none transition-all"
-                  placeholder="Priya Sharma"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold uppercase tracking-wider text-[#8E8E8E]">Age</label>
-                <input 
-                  type="number" 
-                  value={formData.age}
-                  onChange={(e) => updateField('age', parseInt(e.target.value))}
-                  className="w-full px-4 py-3 rounded-xl bg-white border border-[#EAE2D6] focus:ring-2 focus:ring-[#5A5A40] focus:border-transparent outline-none transition-all"
-                />
-              </div>
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-wider text-[#8E8E8E]">Location</label>
-              <input 
-                type="text" 
-                value={formData.location}
-                onChange={(e) => updateField('location', e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white border border-[#EAE2D6] focus:ring-2 focus:ring-[#5A5A40] focus:border-transparent outline-none transition-all"
-                placeholder="Mumbai, India"
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormInput 
+                label="Full Name" 
+                value={formData.name} 
+                onChange={(v) => updateField('name', v)} 
+                placeholder="e.g. Priya Sharma"
+              />
+              <FormInput 
+                label="Age" 
+                type="number"
+                value={formData.age} 
+                onChange={(v) => updateField('age', parseInt(v))} 
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-               <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-[#8E8E8E]">Religion</label>
-                  <select 
-                    value={formData.religion}
-                    onChange={(e) => updateField('religion', e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-white border border-[#EAE2D6] outline-none"
-                  >
-                    <option>Hindu</option>
-                    <option>Sikh</option>
-                    <option>Jain</option>
-                    <option>Christian</option>
-                    <option>Muslim</option>
-                  </select>
-               </div>
-               <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-[#8E8E8E]">Mother Tongue</label>
-                  <input 
-                    type="text" 
-                    value={formData.motherTongue}
-                    onChange={(e) => updateField('motherTongue', e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-white border border-[#EAE2D6] outline-none"
-                    placeholder="Hindi"
-                  />
-               </div>
+            
+            <FormInput 
+              label="Current Location" 
+              value={formData.location} 
+              onChange={(v) => updateField('location', v)} 
+              placeholder="Mumbai, Maharashtra"
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+               <FormSelect 
+                label="Religion" 
+                value={formData.religion} 
+                options={['Hindu', 'Sikh', 'Jain', 'Christian', 'Muslim']}
+                onChange={(v) => updateField('religion', v)} 
+               />
+               <FormInput 
+                label="Caste / Community" 
+                value={formData.caste} 
+                onChange={(v) => updateField('caste', v)} 
+                placeholder="Optional"
+               />
+               <FormInput 
+                label="Mother Tongue" 
+                value={formData.motherTongue} 
+                onChange={(v) => updateField('motherTongue', v)} 
+                placeholder="e.g. Hindi"
+               />
             </div>
           </motion.div>
         );
       case 1:
         return (
           <motion.div 
-            initial={{ x: 20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -20, opacity: 0 }}
-            className="space-y-6"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -20, opacity: 0 }}
+            className="space-y-8"
           >
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-wider text-[#8E8E8E]">Profession</label>
-              <input 
-                type="text" 
-                value={formData.profession}
-                onChange={(e) => updateField('profession', e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white border border-[#EAE2D6] focus:ring-2 focus:ring-[#5A5A40] outline-none transition-all"
-                placeholder="Senior Product Manager"
+            <div className="space-y-6">
+              <FormInput 
+                label="Current Profession" 
+                value={formData.profession} 
+                onChange={(v) => updateField('profession', v)} 
+                placeholder="Senior Software Engineer"
+                icon={Briefcase}
               />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-wider text-[#8E8E8E]">Highest Education</label>
-              <input 
-                type="text" 
-                value={formData.education}
-                onChange={(e) => updateField('education', e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white border border-[#EAE2D6] focus:ring-2 focus:ring-[#5A5A40] outline-none transition-all"
-                placeholder="MBA from Ivy League"
+              <FormInput 
+                label="Highest Educational Degree" 
+                value={formData.education} 
+                onChange={(v) => updateField('education', v)} 
+                placeholder="B.Tech from NIT Nagpur"
+                icon={GraduationCap}
               />
+              <div className="grid grid-cols-2 gap-6">
+                 <FormInput label="College / University" value="IIT Bombay" onChange={() => {}} />
+                 <FormSelect label="Annual Income" value="₹ 15L - 25L" options={['< 5L', '5L-10L', '10L-20L', '20L-30L', '30L+']} onChange={() => {}} />
+              </div>
             </div>
           </motion.div>
         );
       case 2:
         return (
           <motion.div 
-            initial={{ x: 20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -20, opacity: 0 }}
-            className="space-y-6"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -20, opacity: 0 }}
+            className="space-y-8"
           >
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold uppercase tracking-wider text-[#8E8E8E]">Father's Profession</label>
-                <input 
-                  type="text" 
-                  value={formData.familyDetails.fatherProfession}
-                  onChange={(e) => updateFamilyField('fatherProfession', e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-white border border-[#EAE2D6] outline-none"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold uppercase tracking-wider text-[#8E8E8E]">Mother's Profession</label>
-                <input 
-                  type="text" 
-                  value={formData.familyDetails.motherProfession}
-                  onChange={(e) => updateFamilyField('motherProfession', e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-white border border-[#EAE2D6] outline-none"
-                />
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormInput 
+                label="Father's Profession" 
+                value={formData.familyDetails.fatherProfession} 
+                onChange={(v) => updateFamilyField('fatherProfession', v)} 
+              />
+              <FormInput 
+                label="Mother's Profession" 
+                value={formData.familyDetails.motherProfession} 
+                onChange={(v) => updateFamilyField('motherProfession', v)} 
+              />
             </div>
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-wider text-[#8E8E8E]">Family Values</label>
-              <div className="flex gap-2">
+            
+            <div className="space-y-4">
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Family Values</label>
+              <div className="flex gap-3">
                 {['Traditional', 'Moderate', 'Liberal'].map(val => (
                   <button
                     key={val}
                     type="button"
                     onClick={() => updateFamilyField('familyValues', val)}
-                    className={`flex-1 py-3 rounded-xl border text-sm font-medium transition-all ${
+                    className={`flex-1 py-3.5 px-4 rounded-xl border-2 font-bold text-xs transition-all ${
                       formData.familyDetails.familyValues === val 
-                      ? 'bg-[#5A5A40] text-white border-[#5A5A40]' 
-                      : 'bg-white text-[#555] border-[#EAE2D6] hover:bg-[#F5F5F0]'
+                      ? 'bg-slate-900 text-white border-slate-900 shadow-lg shadow-slate-900/10' 
+                      : 'bg-white text-slate-500 border-slate-100 hover:border-indigo-200'
                     }`}
                   >
                     {val}
@@ -203,30 +183,32 @@ export default function EditProfileForm({ initialData, onSave, onCancel }: EditP
       case 3:
         return (
           <motion.div 
-            initial={{ x: 20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -20, opacity: 0 }}
-            className="space-y-6"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -20, opacity: 0 }}
+            className="space-y-8"
           >
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-wider text-[#8E8E8E]">Short Bio</label>
-              <textarea 
-                rows={4}
-                value={formData.bio}
-                onChange={(e) => updateField('bio', e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white border border-[#EAE2D6] outline-none resize-none focus:ring-2 focus:ring-[#5A5A40]"
-                placeholder="Tell others about yourself..."
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-wider text-[#8E8E8E]">Partner Expectations</label>
-              <textarea 
-                rows={4}
-                value={formData.expectations}
-                onChange={(e) => updateField('expectations', e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white border border-[#EAE2D6] outline-none resize-none focus:ring-2 focus:ring-[#5A5A40]"
-                placeholder="What are you looking for in a partner?"
-              />
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">About Me</label>
+                <textarea 
+                  rows={4}
+                  value={formData.bio}
+                  onChange={(e) => updateField('bio', e.target.value)}
+                  className="w-full px-5 py-4 rounded-2xl bg-white border border-slate-200 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all text-sm font-medium leading-relaxed resize-none"
+                  placeholder="Tell your potential life partner about your personality, hobbies, and outlook on life..."
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">What I'm Looking For</label>
+                <textarea 
+                  rows={4}
+                  value={formData.expectations}
+                  onChange={(e) => updateField('expectations', e.target.value)}
+                  className="w-full px-5 py-4 rounded-2xl bg-white border border-slate-200 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all text-sm font-medium leading-relaxed resize-none"
+                  placeholder="Describe your ideal partner's qualities, education, and family background..."
+                />
+              </div>
             </div>
           </motion.div>
         );
@@ -236,95 +218,130 @@ export default function EditProfileForm({ initialData, onSave, onCancel }: EditP
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col h-full overflow-hidden">
-      {/* Form Header */}
-      <header className="px-6 py-4 flex items-center justify-between border-b border-slate-100">
-        <button onClick={onCancel} className="text-slate-400 hover:text-slate-600 transition-colors">
-          <ArrowLeft size={20} />
-        </button>
-        <div className="flex flex-col items-center">
-          <h1 className="text-base font-bold text-slate-800">Edit Profile</h1>
-          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Step {currentStep + 1} of {STEPS.length}</p>
-        </div>
-        <div className="w-5" />
-      </header>
+    <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 flex flex-col h-full overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-12 h-full">
+        {/* Left Sidebar Info */}
+        <aside className="md:col-span-4 bg-slate-900 p-8 text-white flex flex-col">
+           <button onClick={onCancel} className="mb-12 flex items-center gap-2 text-white/50 hover:text-white transition-colors group">
+              <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+              <span className="text-xs font-bold uppercase tracking-widest">Back to Profile</span>
+           </button>
 
-      {/* Progress Stepper */}
-      <div className="px-8 pt-6 pb-4 bg-slate-50 border-b border-slate-100">
-        <div className="flex items-center w-full relative">
-          {STEPS.map((step, index) => {
-            const Icon = step.icon;
-            const isActive = index === currentStep;
-            const isCompleted = index < currentStep;
-            
-            return (
-              <React.Fragment key={step.id}>
-                <div className="flex flex-col items-center flex-1 z-10">
-                  <div 
-                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
-                      isActive ? 'bg-indigo-600 text-white shadow-md' : 
-                      isCompleted ? 'bg-green-500 text-white' : 
-                      'bg-slate-200 text-slate-500'
-                    } text-xs font-bold mb-1.5`}
-                  >
-                    {isCompleted ? <Check size={14} /> : <span>{index + 1}</span>}
-                  </div>
-                  <span className={`text-[9px] font-bold uppercase tracking-wider ${
-                    isActive ? 'text-indigo-600' : 'text-slate-400'
-                  }`}>
-                    {step.title}
-                  </span>
-                </div>
-                {index < STEPS.length - 1 && (
-                  <div className={`h-[1px] flex-1 -mt-4 transition-colors duration-300 ${
-                    index < currentStep ? 'bg-green-500' : 'bg-slate-200'
-                  }`} />
-                )}
-              </React.Fragment>
-            );
-          })}
+           <div className="mb-12">
+              <h2 className="text-2xl font-display font-bold mb-2">Refine Your Brand</h2>
+              <p className="text-sm text-slate-400 leading-relaxed font-medium">Your profile is the first impression you make. Keep it updated and detailed for 5x better matches.</p>
+           </div>
+
+           <nav className="space-y-2">
+              {STEPS.map((step, index) => (
+                 <div 
+                  key={step.id}
+                  className={`flex items-start gap-4 p-4 rounded-2xl transition-all ${
+                    index === currentStep ? 'bg-white/10 shadow-xl' : 'opacity-40'
+                  }`}
+                 >
+                    <div className={`p-2 rounded-lg ${index === currentStep ? 'bg-indigo-500 text-white' : 'bg-white/10'}`}>
+                       <step.icon size={18} />
+                    </div>
+                    <div>
+                       <h3 className="text-sm font-bold tracking-tight">{step.title}</h3>
+                       <p className="text-[10px] text-slate-400 font-medium">{step.description}</p>
+                    </div>
+                    {index < currentStep && (
+                       <Check size={16} className="ml-auto text-green-400 mt-1" />
+                    )}
+                 </div>
+              ))}
+           </nav>
+
+           <div className="mt-auto pt-8">
+              <div className="flex justify-between items-center mb-2">
+                 <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Total Completion</span>
+                 <span className="text-[10px] font-bold text-indigo-400">85%</span>
+              </div>
+              <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden">
+                 <div className="h-full bg-indigo-500 w-[85%]" />
+              </div>
+           </div>
+        </aside>
+
+        {/* Form Content */}
+        <div className="md:col-span-8 flex flex-col bg-white">
+           <header className="px-10 py-8 border-b border-slate-100 flex justify-between items-center">
+              <div>
+                 <h1 className="text-xl font-display font-bold text-slate-800">{STEPS[currentStep].title}</h1>
+                 <p className="text-xs text-slate-500 font-medium">{STEPS[currentStep].description}</p>
+              </div>
+              <div className="flex items-center gap-1">
+                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mr-2">Step</span>
+                 {STEPS.map((_, i) => (
+                    <div key={i} className={`w-1.5 h-1.5 rounded-full transition-all ${i === currentStep ? 'w-6 bg-indigo-600' : 'bg-slate-200'}`} />
+                 ))}
+              </div>
+           </header>
+
+           <main className="flex-1 px-10 py-10 overflow-y-auto no-scrollbar">
+              <AnimatePresence mode="wait">
+                 {renderStep()}
+              </AnimatePresence>
+           </main>
+
+           <footer className="px-10 py-8 bg-slate-50/80 backdrop-blur-md border-t border-slate-100 flex justify-between items-center sticky bottom-0">
+              <button 
+                onClick={handlePrev}
+                disabled={currentStep === 0}
+                className="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-slate-800 disabled:opacity-0 transition-all"
+              >
+                 <ArrowLeft size={16} /> Previous
+              </button>
+              
+              <div className="flex gap-4">
+                 <button onClick={onCancel} className="hidden sm:block text-xs font-bold text-slate-400 hover:text-slate-900 transition-colors uppercase tracking-widest">
+                    Cancel Changes
+                 </button>
+                 <button 
+                  onClick={handleNext}
+                  className="px-8 py-3.5 bg-indigo-600 text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-indigo-600/20 hover:bg-indigo-700 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2"
+                 >
+                    {currentStep === STEPS.length - 1 ? 'Save Profile' : 'Continue'}
+                    <ArrowRight size={16} />
+                 </button>
+              </div>
+           </footer>
         </div>
       </div>
-
-      {/* Form Content */}
-      <main className="flex-1 px-8 py-8 overflow-y-auto">
-        <div className="mb-6">
-          <h2 className="text-lg font-bold text-slate-800">{STEPS[currentStep].title}</h2>
-          <p className="text-sm text-slate-500">Please provide accurate information for better matching.</p>
-        </div>
-        <AnimatePresence mode="wait">
-          {renderStep()}
-        </AnimatePresence>
-      </main>
-
-      {/* Footer Navigation */}
-      <footer className="px-8 py-4 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
-        {currentStep > 0 ? (
-          <button 
-            onClick={handlePrev}
-            className="px-6 py-2 text-sm font-bold text-slate-600 hover:text-slate-800 flex items-center gap-2"
-          >
-            <ArrowLeft size={16} />
-            Previous
-          </button>
-        ) : <div />}
-        
-        <div className="flex gap-3">
-          <button 
-            onClick={onCancel}
-            className="px-6 py-2 text-sm font-bold text-slate-500 bg-white border border-slate-300 rounded-lg hover:bg-slate-50"
-          >
-            Cancel
-          </button>
-          <button 
-            onClick={handleNext}
-            className="px-8 py-2 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm flex items-center gap-2"
-          >
-            {currentStep === STEPS.length - 1 ? 'Save Changes' : 'Continue'}
-            <ArrowRight size={16} />
-          </button>
-        </div>
-      </footer>
     </div>
   );
+}
+
+function FormInput({ label, value, onChange, type = 'text', placeholder, icon: Icon }: any) {
+  return (
+    <div className="space-y-2">
+      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+         {Icon && <Icon size={12} className="text-indigo-400" />} {label}
+      </label>
+      <input 
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full px-5 py-3.5 rounded-xl bg-slate-50 border border-slate-200 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all text-sm font-bold text-slate-700"
+        placeholder={placeholder}
+      />
+    </div>
+  );
+}
+
+function FormSelect({ label, value, onChange, options }: any) {
+   return (
+      <div className="space-y-2">
+         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{label}</label>
+         <select 
+            value={value} 
+            onChange={(e) => onChange(e.target.value)}
+            className="w-full px-5 py-3.5 rounded-xl bg-slate-50 border border-slate-200 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all text-sm font-bold text-slate-700 appearance-none"
+         >
+            {options.map((opt: string) => <option key={opt} value={opt}>{opt}</option>)}
+         </select>
+      </div>
+   );
 }
