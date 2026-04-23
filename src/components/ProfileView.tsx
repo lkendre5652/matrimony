@@ -12,15 +12,18 @@ import {
   Send,
   MoreVertical,
   CheckCircle2,
-  Clock
+  Clock,
+  Settings
 } from 'lucide-react';
 
 interface ProfileViewProps {
   profile: UserProfile;
   onSendProposal: () => void;
+  isOwnProfile?: boolean;
+  onEdit?: () => void;
 }
 
-export default function ProfileView({ profile, onSendProposal }: ProfileViewProps) {
+export default function ProfileView({ profile, onSendProposal, isOwnProfile, onEdit }: ProfileViewProps) {
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [proposalSent, setProposalSent] = useState(false);
 
@@ -42,7 +45,7 @@ export default function ProfileView({ profile, onSendProposal }: ProfileViewProp
       {/* Top Profile Header */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-0">
         {/* Photo Section */}
-        <div className="md:col-span-5 relative aspect-square md:aspect-auto h-full overflow-hidden bg-slate-100">
+        <div className="md:col-span-5 relative aspect-square md:aspect-auto h-full overflow-hidden bg-slate-100 min-h-[300px]">
           <AnimatePresence mode="wait">
             <motion.img
               key={activePhotoIndex}
@@ -56,20 +59,30 @@ export default function ProfileView({ profile, onSendProposal }: ProfileViewProp
             />
           </AnimatePresence>
 
-          {/* Photo Navigation */}
+          {/* Photo Navigation Overlay */}
           {profile.photos.length > 1 && (
-            <div className="absolute inset-x-0 bottom-4 flex justify-center gap-1.5 z-10">
-              {profile.photos.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={(e) => { e.stopPropagation(); setActivePhotoIndex(i); }}
-                  className={`h-1 rounded-full transition-all ${i === activePhotoIndex ? 'w-6 bg-white' : 'w-2 bg-white/50'}`}
-                />
-              ))}
-            </div>
+            <>
+              <div className="absolute inset-y-0 left-0 flex items-center p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onClick={prevPhoto} className="p-1 px-2 bg-black/20 text-white rounded-full hover:bg-black/40"><ChevronLeft size={16} /></button>
+              </div>
+              <div className="absolute inset-y-0 right-0 flex items-center p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onClick={nextPhoto} className="p-1 px-2 bg-black/20 text-white rounded-full hover:bg-black/40"><ChevronRight size={16} /></button>
+              </div>
+              <div className="absolute inset-x-0 bottom-4 flex justify-center gap-1.5 z-10">
+                {profile.photos.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={(e) => { e.stopPropagation(); setActivePhotoIndex(i); }}
+                    className={`h-1 rounded-full transition-all ${i === activePhotoIndex ? 'w-6 bg-white' : 'w-2 bg-white/50'}`}
+                  />
+                ))}
+              </div>
+            </>
           )}
           
-          <div className="absolute top-2 right-2 bg-green-500 w-3 h-3 rounded-full border-2 border-white shadow-sm"></div>
+          <div className="absolute top-4 left-4 bg-white/30 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white uppercase tracking-widest">
+            ID: MAT-{profile.id}
+          </div>
         </div>
 
         {/* Basic Info & Actions */}
@@ -78,8 +91,7 @@ export default function ProfileView({ profile, onSendProposal }: ProfileViewProp
             <div className="flex justify-between items-start">
               <div>
                 <h1 className="text-2xl font-bold text-slate-800">{profile.name}, {profile.age}</h1>
-                <p className="text-xs font-semibold text-indigo-600 uppercase tracking-wider mb-2">Profile ID: MAT-{profile.id}8291</p>
-                <div className="flex items-center text-slate-500 text-xs mb-6">
+                <div className="flex items-center text-slate-500 text-xs mt-1 mb-6">
                   <MapPin size={14} className="mr-1" />
                   {profile.location}
                 </div>
@@ -110,22 +122,34 @@ export default function ProfileView({ profile, onSendProposal }: ProfileViewProp
           </div>
 
           <div className="flex gap-3 mt-auto">
-            <button 
-              onClick={handleSendProposal}
-              disabled={proposalSent}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg text-sm font-bold transition-all ${
-                proposalSent 
-                ? 'bg-green-50 text-green-700 border border-green-200' 
-                : 'bg-rose-600 text-white hover:bg-rose-700 shadow-sm'
-              }`}
-            >
-              {proposalSent ? <CheckCircle2 size={18} /> : <Send size={18} />}
-              {proposalSent ? 'Proposal Sent' : 'Send Proposal'}
-            </button>
-            <button className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg text-sm font-bold border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all">
-              <Heart size={18} />
-              Shortlist
-            </button>
+            {isOwnProfile ? (
+              <button 
+                onClick={onEdit}
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg text-sm font-bold bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-600/20 transition-all"
+              >
+                <Settings size={18} />
+                Edit Profile
+              </button>
+            ) : (
+              <>
+                <button 
+                  onClick={handleSendProposal}
+                  disabled={proposalSent}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg text-sm font-bold transition-all ${
+                    proposalSent 
+                    ? 'bg-green-50 text-green-700 border border-green-200' 
+                    : 'bg-rose-600 text-white hover:bg-rose-700 shadow-sm'
+                  }`}
+                >
+                  {proposalSent ? <CheckCircle2 size={18} /> : <Send size={18} />}
+                  {proposalSent ? 'Proposal Sent' : 'Send Proposal'}
+                </button>
+                <button className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg text-sm font-bold border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all">
+                  <Heart size={18} />
+                  Shortlist
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

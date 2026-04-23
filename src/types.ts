@@ -24,6 +24,9 @@ export interface UserProfile {
     familyValues: string;
   };
   expectations: string;
+  isShortlisted?: boolean;
+  isHidden?: boolean;
+  viewedAt?: string;
 }
 
 export interface Proposal {
